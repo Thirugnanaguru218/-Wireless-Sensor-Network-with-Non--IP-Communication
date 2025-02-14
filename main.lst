@@ -1,0 +1,123 @@
+CCS PCM C Compiler, Version 5.008, 5967               18-Sep-24 22:36
+
+               Filename:   C:\Users\computer\Desktop\New folder (2)\main.lst
+
+               ROM used:   80 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   8 (2%) at main() level
+                           9 (2%) worst case
+               Stack used: 1 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   01B
+0003:  NOP
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #fuses HS, NOWDT, NOPUT, NOLVP, NOCPD, NOPROTECT 
+.................... #use delay(clock=40000000)  // Set to your clock frequency 
+0004:  MOVLW  23
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   018
+000A:  MOVLW  0C
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  F7
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  GOTO   016
+0016:  DECFSZ 00,F
+0017:  GOTO   00A
+0018:  BCF    0A.3
+0019:  BCF    0A.4
+001A:  GOTO   04C (RETURN)
+.................... #use rs232(baud=9600, xmit=PIN_C6, rcv=PIN_C7)  // Configure UART 
+....................  
+.................... void main() { 
+001B:  MOVF   03,W
+001C:  ANDLW  1F
+001D:  MOVWF  03
+001E:  MOVLW  40
+001F:  BSF    03.5
+0020:  MOVWF  19
+0021:  MOVLW  A2
+0022:  MOVWF  18
+0023:  MOVLW  90
+0024:  BCF    03.5
+0025:  MOVWF  18
+0026:  MOVLW  FF
+0027:  MOVWF  20
+0028:  BSF    03.5
+0029:  BSF    1F.0
+002A:  BSF    1F.1
+002B:  BSF    1F.2
+002C:  BCF    1F.3
+002D:  MOVLW  07
+002E:  MOVWF  1C
+002F:  BCF    03.7
+....................    char switch_status; 
+....................  
+....................    set_tris_b(0x01);  // Set RB0 as input (switch), others as output 
+0030:  MOVLW  01
+0031:  MOVWF  06
+....................    set_tris_c(0xBF);  // Set RC6 as output (UART TX), RC7 as input (UART RX) 
+0032:  MOVLW  BF
+0033:  MOVWF  07
+0034:  BCF    03.5
+0035:  MOVWF  20
+....................  
+....................    while(TRUE) { 
+....................       switch_status = input_b();  // Read PORTB status 
+0036:  MOVLW  FF
+0037:  BSF    03.5
+0038:  MOVWF  06
+0039:  BCF    03.5
+003A:  MOVF   06,W
+003B:  MOVWF  21
+....................       if (switch_status & 0x01) { // Check if RB0 bit is high (switch ON) 
+003C:  BTFSS  21.0
+003D:  GOTO   043
+....................          putc('O');  // Send 'O' for ON 
+003E:  MOVLW  4F
+003F:  BTFSS  0C.4
+0040:  GOTO   03F
+0041:  MOVWF  19
+....................       } else { 
+0042:  GOTO   047
+....................          putc('F');  // Send 'F' for OFF 
+0043:  MOVLW  46
+0044:  BTFSS  0C.4
+0045:  GOTO   044
+0046:  MOVWF  19
+....................       } 
+....................        
+....................       delay_ms(500); // Update status every 500 ms 
+0047:  MOVLW  02
+0048:  MOVWF  22
+0049:  MOVLW  FA
+004A:  MOVWF  23
+004B:  GOTO   004
+004C:  DECFSZ 22,F
+004D:  GOTO   049
+004E:  GOTO   036
+....................    } 
+.................... } 
+....................  
+004F:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F7A   HS NOWDT NOPUT BROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

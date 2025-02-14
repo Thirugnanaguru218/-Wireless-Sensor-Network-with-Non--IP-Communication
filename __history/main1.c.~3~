@@ -1,0 +1,50 @@
+#include <16F877A.h>
+#fuses HS, NOWDT, NOPUT, NOLVP, NOCPD, NOPROTECT, NOIESO, NOFCMEN
+#use delay(clock=20000000)  // Set to your clock frequency
+
+// LCD module connections
+#define LCD_RS_PIN PIN_D0
+#define LCD_E_PIN  PIN_D1
+#define LCD_DATA4_PIN PIN_D2
+#define LCD_DATA5_PIN PIN_D3
+#define LCD_DATA6_PIN PIN_D4
+#define LCD_DATA7_PIN PIN_D5
+
+#include <lcd.c>  // Include the LCD driver
+
+// Function to initialize the LCD
+void initialize_LCD() {
+   lcd_init();            // Initialize LCD
+   lcd_putc('\f');        // Clear the screen
+   lcd_gotoxy(1, 1);      // Set cursor to first line
+}
+
+// Function to display switch status
+void display_switch_status(char status) {
+   lcd_gotoxy(1, 1);      // Set cursor to first line
+   lcd_puts("Switch Status:"); // Print label
+   lcd_gotoxy(1, 2);      // Set cursor to second line
+   lcd_putc(status);      // Print status ('O' for ON, 'F' for OFF)
+}
+
+void main() {
+   char switch_status;
+   
+   set_tris_c(0x80);  // Set RC7 as input, others as output
+   set_tris_d(0x00);  // Set PORTD as output for LCD
+
+   initialize_LCD();  // Initialize the LCD
+
+   while(TRUE) {
+      switch_status = input_c();  // Read RC7 pin status
+
+      if (switch_status & 0x80) { // Check if RC7 bit is high (switch ON)
+         display_switch_status('O');  // Display 'O' for ON
+      } else {
+         display_switch_status('F');  // Display 'F' for OFF
+      }
+      
+      delay_ms(500); // Update status every 500 ms
+   }
+}
+

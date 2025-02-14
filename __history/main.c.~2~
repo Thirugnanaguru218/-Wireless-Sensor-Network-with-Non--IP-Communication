@@ -1,0 +1,24 @@
+#include <16F877A.h>  // Include the PIC16F877A header file
+#fuses XT, NOWDT, NOPUT, NOLVP, NOCPD, NOCPB, NOBROWNOUT, NOSTVREN
+#use delay(crystal=4000000)  // 4 MHz crystal
+
+#define SWITCH_PIN PIN_B0
+#define TRANSMIT_PIN PIN_C6
+
+void main() {
+    // Configure the I/O pins
+    set_tris_b(0x01);  // Set RB0 as input, others as output
+    set_tris_c(0xBF);  // Set RC6 as output, others as input
+
+    while (TRUE) {
+        if (input(SWITCH_PIN)) {
+            // If switch is pressed (logic HIGH)
+            output_high(TRANSMIT_PIN);  // Transmit '1'
+        } else {
+            // If switch is not pressed (logic LOW)
+            output_low(TRANSMIT_PIN);  // Transmit '0'
+        }
+        delay_ms(100);  // Small delay to debounce and avoid rapid switching
+    }
+}
+

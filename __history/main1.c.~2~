@@ -1,0 +1,28 @@
+#include <16F877A.h>  // Include the PIC16F877A header file
+#fuses XT, NOWDT, NOPUT, NOLVP, NOCPD, NOBROWNOUT
+#use delay(crystal=4000000)  // 4 MHz crystal
+
+#define RECEIVE_PIN PIN_C6
+#define DISPLAY_PIN PIN_B0
+
+void main() {
+    // Configure the I/O pins
+    set_tris_b(0x00);  // Set PORTB as output
+    set_tris_c(0xBF);  // Set RC6 as input, others as output
+    
+    output_low(DISPLAY_PIN); // Initialize DISPLAY_PIN
+
+    while (TRUE) {
+        // Read the received data from RECEIVE_PIN
+        if (input(RECEIVE_PIN)) {
+            // If data received is '1'
+            output_high(DISPLAY_PIN);  // Set DISPLAY_PIN high
+        } else {
+            // If data received is '0'
+            output_low(DISPLAY_PIN);  // Set DISPLAY_PIN low
+        }
+        
+        delay_ms(100);  // Small delay for stability
+    }
+}
+
